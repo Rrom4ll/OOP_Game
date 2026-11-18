@@ -1,58 +1,86 @@
-# ความรู้ที่ใช้และหลักฐานจากไฟล์เรียน
+# ความรู้ที่ใช้
 
-ตรวจจากไฟล์ Java ในเครื่องวันที่ 17 พฤศจิกายน 2026 พบโฟลเดอร์ `ACS_KMUTT/LabOOP232` และตัวอย่างพื้นฐานใน `文档/Java` ชื่อวิชาที่ปรากฏในไฟล์คือ CSS232 จึงยังต้องยืนยันว่าเป็นชุดที่ใช้ประเมินโปรเจกต์นี้ การพบไฟล์ไม่ได้แปลว่าสมาชิกทุกคนเรียนหรือเข้าใจครบแล้ว
+## Java และ OOP
 
-ชื่อไฟล์ด้านล่างอ้างอิงชุดเอกสาร LabOOP232 ที่ตรวจพบ สมาชิกใช้เทียบกับเอกสารวิชาของตนได้ ไม่ต้องมีโฟลเดอร์เหมือนเครื่องผู้จัดทำหรือคัดลอกเอกสารเรียนเข้า repo และไม่เป็น dependency ในการรันเกม
-
-## เชื่อมเนื้อหากับงานเกม
-
-| หัวข้อ | หลักฐานที่เปิดอ่าน | การประยุกต์ในเกม | สิ่งที่เจ้าของงานต้องอธิบายได้ |
-|---|---|---|---|
-| Class / object / constructor | `Mid/Lab1/DispatchDemo.java`, `Final/Assignment1_Java/Employee.java` | สร้าง Player, Enemy, Door เป็นออบเจ็กต์ | ข้อมูลกับพฤติกรรมของแต่ละคลาส และเหตุผลที่ต้องสร้างออบเจ็กต์ |
-| Encapsulation / guard condition | `Mid/Lab_4_Encapsulation.java` มี SeatPool และการตรวจช่วงค่า | คุม HP, ใช้ยา/กุญแจ และเปิดประตูผ่านเมธอด | ทำไมค่า HP ไม่หลุดขอบเขต และทำไมตรวจเงื่อนไขก่อนเปลี่ยนสถานะ |
-| Inheritance / overriding | `Mid/PayrollApp.java`, `Mid/Lab1/DispatchDemo.java` | Key, Potion, Weapon, Armor สืบทอด Item | ข้อมูลร่วมคืออะไร และเมธอดใดควรต่างกัน |
-| Polymorphism | `Mid/PayrollApp.java` วน Employee เรียก calculatePay(), `Mid/NotificationService.java` | วน Item เรียก getDescription() ของชนิดจริง | ทำไมเรียกผ่านคลาสแม่แล้วได้พฤติกรรมคลาสลูก |
-| Interface / abstraction | `Mid/Lab_4_Abstraction.java` มี Notifier และ AlertService | หากมี renderer สองแบบ ใช้สัญญาเดียวกันได้ | ผู้เรียกควรรู้อะไร และรายละเอียดใดซ่อนอยู่หลังสัญญา |
-| Array / loop / condition / input | NotificationService ใช้อาร์เรย์; `文档/Java/scannerwithcondition.java` ใช้ Scanner และ if | แผนที่ char[][] รับคำสั่ง เดิน และสร้างภาพ | แถว/คอลัมน์ การตรวจขอบเขต และการจัดการคำสั่งผิด |
-| ArrayList / association | `Final/Assignment1_Java/Employee.java` และ `Division.java` | Player มีกระเป๋า Item และอ้างอิง Weapon | is-a ต่างจาก has-a อย่างไร และใครเปลี่ยนข้อมูลได้ |
-| Requirements → classes / CRC | `Final/LabW09AnalysisAndDesign.java` | แยกความรับผิดชอบ Game/Player/Dungeon/Renderer | ทำไมไม่รวมทุกอย่างใน Game และคลาสใดต้องร่วมมือกัน |
-| UML → Java | `Final/Assignment1_Java/README.md`, `Employee.java` | วาด class diagram แล้วสร้าง field/method ตามความสัมพันธ์ | ลูกศรสืบทอดและจำนวนออบเจ็กต์ตรงกับโค้ดอย่างไร |
-
-กติกาเพิ่มเติมใช้เงื่อนไขและการคุมสถานะ: W ตีแล้วไม่เดิน, ศัตรูตายไม่สวน, Equip จึงให้โบนัส, EXP ครบเกณฑ์เพิ่ม Level/max HP/ATK โดยไม่เติม current HP ดูรายละเอียดใน [GAME_DESIGN](GAME_DESIGN.md)
-
-อ่าน `LabW09AnalysisAndDesign.java` ช่วงคำอธิบายและตัวอย่าง CRC รวมถึงค้นโครงสร้างใน LabW10/LabW11 เพื่อทราบขอบเขต ยังไม่ได้ตรวจเนื้อหาทั้งหมดทุกไฟล์หรือเปิดอ่านสไลด์ PDF
-
-## ขอบเขตภาษาและเครื่องมือ
-
-- เริ่มด้วยคลาสธรรมดา เมธอด constructor, private/public, if/switch, loop, array และ ArrayList ตามที่ทีมยืนยันว่าเรียนแล้ว
-- ใช้ interface หรือ abstract เมื่อช่วยแก้โจทย์จริง อย่าเพิ่มเพียงเพื่อให้มีชื่อหัวข้อครบ โดยเฉพาะ abstract class ต้องยืนยันแยกจาก interface
-- เลือก JDK รุ่นเดียวกับวิชาตั้งแต่ M0 และทดสอบบนเครื่องเพื่อน ตัวอย่างที่พบมีทั้งโค้ดพื้นฐานและโค้ดที่ใช้คุณสมบัติใหม่ จึงไม่สรุป JDK ของโปรเจกต์จากไฟล์เดียว
-- ใช้ Java standard library เป็นฐาน ยังไม่เพิ่มไลบรารีรับปุ่ม framework หรือระบบ build ภายนอก
-- เก็บแผนที่/อาร์ตในอาร์เรย์ได้ก่อน ถ้าจะโหลดจากไฟล์ ให้ทำงานอ่านไฟล์และจัดการข้อผิดพลาดเป็นงานเรียนรู้แยก
-
-## ส่วนที่เป็นความรู้เสริม
-
-| เรื่อง | สถานะและแนวทาง |
+| แนวคิด | ใช้กับโปรเจกต์ |
 |---|---|
-| การฉายภาพบุคคลที่หนึ่งเป็นชั้นระยะ | ไม่พบหลักฐานในแลบที่อ่าน ให้ทดลองด้วยพิกัดคงที่และลูป แล้วอธิบายวิธีเอง |
-| Ray Casting / sin / cos / perspective | ไม่พบหลักฐานในแลบที่อ่าน เป็นทางเลือกหลังทีมเข้าใจผลทดลอง M1 |
-| ANSI escape / cursor / terminal wrapping | ความรู้เสริมเพื่อแสดงผล ทดลองข้ามเครื่อง มีโหมดเฟรมต่อกัน |
-| รับปุ่มทันทีโดยไม่ Enter | ไม่อยู่ใน MVP ใช้ Scanner/การรับบรรทัดก่อน |
-| Threads, network, database | ไม่มีความจำเป็นต่อขอบเขตเกมนี้ |
+| Class / Object / Constructor | สร้าง Player, Enemy, Item และข้อมูลโลกจากค่าตั้งต้น |
+| Encapsulation | เก็บ HP/EXP/กระเป๋าเป็น private เปลี่ยนผ่านเมธอดที่ตรวจเงื่อนไข |
+| Inheritance | Weapon, Armor, Potion และ Key สืบทอด Item |
+| Overriding / Polymorphism | เรียก getDescription() ผ่าน Item แล้วได้รายละเอียดของชนิดจริง |
+| Array / อาร์เรย์สองมิติ | เก็บช่องด่านและประกอบภาพ ASCII |
+| ArrayList / List | เก็บรายการของและให้ส่วนหน้าจออ่านโดยไม่แก้รายการโดยตรง |
+| if / switch / Loop | แยกคำสั่ง ตรวจช่อง ตรวจตาย และวนเกณฑ์ EXP |
+| Scanner / String | รับคำสั่งทีละบรรทัดและสร้างข้อความหนึ่งเฟรม |
+| Association / Multiplicity | Player มี Item หลายชิ้น อาวุธ/เกราะที่สวมอย่างละ 0..1 ชิ้น |
 
-## เกณฑ์เลือกรับโค้ดหรือแนวคิดใหม่
+## OOAD และ UML — บท 9–11
 
-1. เจ้าของงานอธิบาย input → การคำนวณ → ผลลัพธ์ให้เพื่อนฟังได้
-2. ชี้กลับไปยังหัวข้อเรียนหรือระบุชัดว่าเป็นความรู้เสริม
-3. เขียนตัวอย่างย่อหรือทดลองแก้เงื่อนไขเองให้เห็นผลได้
-4. เพื่อนรีวิวและลองกรณีผิดพลาดก่อน merge
-5. ถ้าเป็นตัวอย่างจาก AI/ภายนอก ให้บันทึกสิ่งที่นำมาใช้และการตรวจสอบตามจริง
+- แยกกติกาออกจากวิธีเขียน: “ตีแล้วไม่เดิน” เป็นกติกา ส่วน Game จะเรียกเมธอดใดเป็นการออกแบบ
+- ใช้ CRC ระบุหน้าที่และผู้ร่วมงานของแต่ละคลาส เช่น Game ประสาน Player/Enemy ส่วน Player คำนวณพลังของตน
+- ใช้ Information Expert ให้คลาสที่มีข้อมูลเหมาะสมรับผิดชอบการคำนวณ
+- ใช้ Low Coupling / High Cohesion ให้เปลี่ยนสูตรโจมตีโดยไม่ต้องแก้ renderer
+- Class Diagram ต้องตรงกับ field, method, extends และจำนวนออบเจ็กต์ที่ใช้จริง
+- การอ้างถึง Item เป็น association ก่อน ไม่ถือว่าเป็น composition เพียงเพราะมี field หรือ List
 
-## สิ่งที่ต้องยืนยันในประชุม M0
+James ใช้กับ Game/Dungeon/Door/หน้าจอ Jezz ใช้กับ Player/Enemy/Item และอุปกรณ์
 
-- [ ] CSS232 / LabOOP232 คือเนื้อหาที่ต้องใช้กับโปรเจกต์นี้หรือไม่
-- [ ] สมาชิกเข้าใจหัวข้อใดแล้วบ้าง รวม abstract/interface, ArrayList และการอ่านไฟล์
-- [ ] อาจารย์กำหนดเรื่อง library, JDK, AI, จำนวนคลาส หรือ UML ไว้อย่างไร
-- [x] จำนวนสมาชิก: ผู้ใช้ยืนยันทีม 2 คน
-- [ ] รายชื่อ วันส่งงาน และเวลาทำงานต่อสัปดาห์ของทั้งสองคน
-- [ ] วิธีวาดภาพที่ทีมพร้อมรับผิดชอบและอธิบายเอง
+## Interaction และ State — บท 12
+
+- Sequence ใช้ไล่ลำดับ Game เรียก Player.attack() แล้วตรวจมอนรอด/ตาย ก่อนเรียกสวนหรือเพิ่ม EXP
+- Guard ใช้ตรวจเงื่อนไขก่อนเปลี่ยนข้อมูล เช่น ของอยู่ในกระเป๋าและ HP ยังเพิ่มได้ ก่อนใช้ยา
+- Game ใช้ enum ภายในคลาสเพื่อแยก PLAYING, INVENTORY, GAME_OVER และ VICTORY ได้
+- Enemy ใช้ isAlive() จาก HP > 0 ไม่ต้องมี state ซ้ำอีกตัว
+- การโจมตีเป็นหนึ่ง action แล้วกลับไปรับคำสั่ง ไม่ล็อกผู้เล่นอยู่ในโหมดต่อสู้
+
+```mermaid
+sequenceDiagram
+    participant G as Game
+    participant P as Player
+    participant E as Enemy
+    G->>P: attack(enemy)
+    P->>E: takeDamage(amount)
+    P-->>G: actualDamage
+    G->>E: isAlive()
+    E-->>G: alive
+    alt alive
+        G->>E: attack(player)
+        E->>P: takeDamage(amount)
+        E-->>G: actualDamage
+    else defeated
+        G->>E: getExpReward()
+        E-->>G: reward
+        G->>P: gainExp(reward)
+    end
+    Note over G,E: Player position does not change
+```
+
+## Workflow และ Architecture — บท 13
+
+```text
+Main: สร้างและเชื่อมออบเจ็กต์
+Game: คุมลำดับคำสั่งและสถานะเกม
+TerminalDisplay / AsciiRenderer: รับข้อมูลและแสดงผล
+Player / Enemy / Item / โลกเกม: เก็บข้อมูลและทำหน้าที่ของแต่ละคลาส
+```
+
+Game เรียกข้อมูลและกติกา ส่วน Player/Enemy/Item ไม่รับ Scanner หรือพิมพ์หน้าจอเอง Renderer ไม่หัก HP หรือเพิ่ม EXP ใช้ Activity Diagram เมื่อต้องไล่ทางเลือกของ W และ Inventory โดยแสดงหน้าที่ของคลาสให้ตรงกับโค้ด
+
+## Design Patterns — บท 14
+
+เริ่มจาก constructor, field, enum และ guard ที่ตรงไปตรงมา แล้วเลือก pattern เมื่อมีปัญหารองรับ:
+
+| Pattern | เมื่อใดจึงค่อยใช้ |
+|---|---|
+| Static factory | สร้างของชนิดเดิมด้วยค่าซ้ำหลายจุด |
+| Strategy | มีสูตรหรือพฤติกรรมหลายแบบที่ต้องสลับจริง |
+| Observer | หนึ่งเหตุการณ์ต้องแจ้งหลายระบบที่แยกกัน |
+| Decorator | มีโบนัสหรือพฤติกรรมที่ต้องซ้อนหลายชั้น |
+| State | แต่ละสถานะทำงานต่างกันมากจน enum/guard อ่านยาก |
+| Adapter / Composite / Template Method / Builder | เพิ่มเมื่อเกิดโจทย์ของ pattern นั้นในระบบ |
+
+กติกาปัจจุบันใช้ดาบ/เกราะเพิ่มค่าพลังโดยตรงได้ ไม่จำเป็นต้องเพิ่มคลาสเพื่อใส่ pattern ให้ครบ
+
+## ส่วนที่ต้องทดลองเพิ่ม
+
+ภาพ First Person, แสงเงา ASCII, ANSI cursor และสัดส่วนฟอนต์เป็นงานทดลองของ James เริ่มจากภาพระยะใกล้/กลาง/ไกลก่อน การรับปุ่มแบบทันที Threads, Network และ Database ไม่อยู่ในงานรุ่นแรก

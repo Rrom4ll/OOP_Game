@@ -5,7 +5,7 @@
 |Level: 1              | #9SS#GSS\\\\            ...              ...              ...              ...              ... ////SGS|G#9S |A: Turn Left            |
 |HP: 17/20             | 9S##GS#HGSHH\\\      ...              ...              ...              ...              ... ///GHGSHS#|S9S# |D: Turn Right           |
 |EXP: 0/10             | S#9GS#GGSHGG|HG\\\\..              ...              ...              ...              ...////MHGMGSHG#G|#S#9 |I: Inventory            |
-|ATK: 7                | -------------------\\\          ...              ...              ...              ...///------------------- |                        |
+|ATK: 7                | -------------------\\\          ...              ...              ...              ...///------------------- |Q: Quit                 |
 |DEF: 2                | 9S##GS#|GSHHGMHHhMH3|M\\\\   ...              ...              ...              ..////hM3MHhMGMHGH|SHS#GS9S# |Press Enter             |
 |                      | S#9GS#G|SHGGMHGhMHhh|3hh53\\\              ...              ...              ..///3h5|M3hHhMHMHGMG|HG#GS#S#9 |                        |
 |WEAPON                | #9SS#GS|HGSMHGMMHhMM|hM53h553\\\\       ...              ...              .////323h53|3hMhMHhHGMHS|GSGS#G#9S |ENEMY AHEAD             |

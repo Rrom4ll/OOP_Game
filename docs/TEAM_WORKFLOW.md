@@ -1,64 +1,105 @@
-# การแบ่งงานทีมและ Git
+# Git และการรวมงาน
 
-## 1. เอกสารงานรายคน
+## Branch
 
-| สมาชิก | Branch | งานหลัก | รายละเอียด |
-|---|---|---|---|
-| A (James) | `feat/world-view` | โลกเกม การเดิน ประตู กุญแจ บันได ภาพ ASCII รับคำสั่ง หน้าจอ และรวมระบบ | [งาน James](A_James.md) |
-| B (Jezz) | `feat/player-combat` | Player, Enemy, Item, Weapon, Armor, Potion กระเป๋า Equip/Use และ EXP/Level | [งาน Jezz](B_Jezz.md) |
+| Branch | ผู้รับผิดชอบ | หน้าที่ |
+|---|---|---|
+| main | James ประสานการรวม | เวอร์ชันรวมที่ compile/run ได้ |
+| feat/world-view | A (James) | โลกเกม การควบคุม ภาพ หน้าจอ และเชื่อมระบบ |
+| feat/player-combat | B (Jezz) | Player/Enemy/Item อุปกรณ์ ต่อสู้ และ EXP/Level |
 
-James ดูแล Main, Game, Dungeon, Door, Key, AsciiRenderer และ TerminalDisplay ส่วน Jezz ดูแล Player, Enemy, Item, Weapon, Armor และ Potion
+ใช้ branch ของแต่ละคนต่อเนื่อง งานย่อยทำเป็น commit ใน branch เดิม ตั้งชื่อ/อีเมล Git ของตนเองก่อน commit และใช้โฟลเดอร์ clone แยกกัน
 
-## 2. ใช้สาม branch
+## เข้า branch ของตัวเอง
 
-- `main`: เวอร์ชันรวมที่รันได้ ใช้ร่วมกัน โดย James ประสานการ merge
-- `feat/world-view`: งานทั้งหมดของ James
-- `feat/player-combat`: งานทั้งหมดของ Jezz
+หลัง clone:
 
-ใช้สอง branch ของสมาชิกต่อเนื่องตลอดโปรเจกต์ งานย่อยเป็น commit ภายใน branch เดิม
-
-## 3. Flow รวมงาน
-
-```text
-                    main
-              โครงเริ่มต้นที่รันได้
-                 /       \
-                /         \
-   feat/world-view     feat/player-combat
-        James                 Jezz
-                \         /
-                 \       /
-                    main
-              รวมส่วนที่พร้อมเป็นช่วง
-                 /       \
-        ทั้งคู่ merge origin/main
-        กลับเข้า branch เดิมแล้วทำต่อ
+```bash
+git fetch origin
+git switch feat/world-view
+git merge origin/main
 ```
 
-1. ใช้ Main.java บนฐานเริ่มต้นที่รันได้ แล้วตกลงชื่อเมธอดที่จะเรียกกันก่อนเพิ่มระบบ
-2. แต่ละคนเข้า branch ที่เตรียมจาก main แล้ว ทำงานและ commit ใน branch ของตน
-3. push รอบที่พร้อม แล้วแจ้งอีกคนว่าเพิ่มอะไรและเรียกใช้อย่างไร
-4. James fetch งานใหม่และรวม branch ที่พร้อมเข้า main ถ้างาน James ต้องใช้ข้อมูลใหม่ของ Jezz ให้รวม Jezz ก่อน แล้ว James นำ main เข้า branch ของตัวเองเพื่อเชื่อมให้ครบ
-5. รวมงาน James ที่เชื่อมแล้ว ลองเล่นผลของรอบนั้น แล้ว push main
-6. ทั้งคู่ fetch แล้ว merge origin/main กลับเข้า branch ของตน ก่อนทำรอบต่อไป
+Jezz เปลี่ยนคำสั่ง switch เป็น `git switch feat/player-combat` แล้ว merge origin/main เช่นกัน หากยังไม่มี local branch Git จะสร้างจาก remote branch ที่ชื่อเดียวกัน
 
-ถ้ามีปัญหาให้แก้ใน branch เจ้าของไฟล์แล้วรวมใหม่ ใช้ working directory แยกกันและ commit งานค้างก่อนสลับ branch
+## ส่งงานหนึ่งรอบ
 
-## 4. รอบส่งงาน
+1. ทำและลองส่วนที่รับผิดชอบใน branch ของตน
+2. git add เฉพาะไฟล์ที่แก้จริง แล้ว commit/push
+3. แจ้งอีกคนว่ารอบใดพร้อม เมธอดใดเพิ่มหรือเปลี่ยน และส่วนที่ลองได้
+4. James รวมส่วนที่เป็นฐานก่อน แล้วรวมส่วนเชื่อมที่ใช้ฐานนั้น
+5. ลองผลรวมของรอบให้รันได้ก่อน push main
+6. ทั้งคู่ fetch แล้ว merge origin/main เข้า branch ของตนก่อนทำต่อ
 
-| รอบ | James | Jezz | ผลที่ต้องเห็น |
-|---|---|---|---|
-| 1: สำรวจ | แผนที่ทดลอง W/A/D ภาพและ STATUS | Player พิกัด/ทิศ/HP และ Item พื้นฐาน | เปิดเกมแล้วเดินสำรวจได้ |
-| 2: ของและประตู | จุดเก็บของ Key/Door หน้า Inventory และภาพดาบ | กระเป๋า Weapon/Armor/Potion และ Equip/Use | เก็บของ ใช้ยา สวมของ เปิดทางได้ |
-| 3: ต่อสู้ | เชื่อม W กับการตีและ combat log | Enemy ดาเมจ เกราะ HP และ EXP/Level | ตีแล้วอยู่ที่เดิม มอนตายไม่สวน และ Level ไม่ Heal |
-| 4: เกมครบ | สองชั้น บันได จุดจบ เริ่มใหม่ และอาร์ตทั้งหมด | ปรับค่าพลังและแก้บั๊กข้อมูล/กติกา | เล่นตั้งแต่เริ่มจนชนะหรือแพ้ได้ |
+ตัวอย่างส่งงาน:
 
-## 5. จุดเชื่อม
+```bash
+git add src/Player.java src/Item.java src/Weapon.java src/Armor.java src/Potion.java src/Enemy.java
+git commit -m "feat: add player and item foundation"
+git push -u origin feat/player-combat
+```
 
-- Jezz ทำ Player/Item พื้นฐานให้ James ใช้ก่อน ไม่ต้องรอระบบต่อสู้ทั้งหมดเสร็จ
-- Game ของ James เลือกว่า W ต้องเดินหรือตี ส่วน Player/Enemy ของ Jezz คำนวณการโจมตีและเปลี่ยน HP
-- Inventory UI ของ James เรียก Equip/Use ของ Jezz ไม่บวกโบนัสหรือแก้ HP อีกชุดในหน้าจอ
-- Key ของ James สืบทอด Item ของ Jezz การจับคู่ประตูอยู่ใน Door ส่วนกระเป๋ารองรับ Item ทั่วไป
-- ถ้าต้องเปลี่ยนชื่อเมธอดหรือข้อมูลที่อีกคนใช้อยู่ ให้ตกลงก่อนแล้วปรับส่วนเชื่อมให้ครบ
+รายการไฟล์เป็นตัวอย่าง ใช้เฉพาะไฟล์ที่มีอยู่และแก้ในงานนั้น ก่อนสลับ branch ให้ commit งานค้างของตนเองก่อน
 
-คำสั่ง Git และรายละเอียดเมธอดของแต่ละคนอยู่ใน A_James.md และ B_Jezz.md กติกาที่ยังต้องเลือกให้ยึด [GAME_DESIGN](GAME_DESIGN.md)
+## James รวมงาน
+
+รับฐานของ Jezz ก่อน:
+
+```bash
+git fetch origin
+git switch main
+git pull --ff-only origin main
+git merge --no-ff origin/feat/player-combat
+```
+
+ถ้างาน James ใช้เมธอดที่เพิ่งรวม ให้นำ main เข้า branch ตัวเอง:
+
+```bash
+git switch feat/world-view
+git merge main
+```
+
+เชื่อมให้ครบ ลองรัน แล้ว commit/push งาน James:
+
+```bash
+git add src/Game.java src/Dungeon.java src/Door.java src/Key.java src/AsciiRenderer.java src/TerminalDisplay.java
+git commit -m "feat: connect world view and player systems"
+git push origin feat/world-view
+```
+
+เปลี่ยนรายการ git add ให้ตรงกับไฟล์ที่แก้จริง จากนั้นรวมกลับ main:
+
+```bash
+git switch main
+git merge --no-ff origin/feat/world-view
+javac -encoding UTF-8 -d build src/*.java
+java -cp build Main
+git push origin main
+```
+
+หากรวมแล้วมีปัญหา ให้แก้ใน branch เจ้าของไฟล์แล้วรวมใหม่ก่อน push main
+
+## รับ main กลับไปทำต่อ
+
+Jezz:
+
+```bash
+git fetch origin
+git switch feat/player-combat
+git merge origin/main
+```
+
+James ใช้ชุดคำสั่งเดียวกันโดยเปลี่ยนเป็น `feat/world-view`
+
+ถ้ามี conflict ใช้ git status ดูไฟล์ คุยกับเจ้าของส่วนที่ชน แก้เครื่องหมาย conflict แล้ว git add/commit และลองผลที่เกี่ยวข้อง หลีกเลี่ยงการเลือกทับทั้งไฟล์โดยไม่อ่าน ใช้โฟลเดอร์ clone แยกกันของแต่ละคน
+
+## รอบรวมงาน
+
+| รอบ | ผลที่รวมแล้วต้องได้ |
+|---|---|
+| 1 | เดินสำรวจและหัน พร้อมโครง Player/Item ที่ compile ได้ |
+| 2 | เก็บของ Inventory Equip/Use และประตู |
+| 3 | ต่อสู้ เกราะ EXP/Level แพ้และเริ่มใหม่ |
+| 4 | สองชั้น บันได ทางออก และภาพครบ |
+
+รายละเอียดแต่ละฝั่ง: [James](A_James.md) / [Jezz](B_Jezz.md) เมธอดร่วม: [PROJECT_PLAN](PROJECT_PLAN.md)

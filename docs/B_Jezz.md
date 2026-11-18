@@ -1,163 +1,130 @@
-# B (Jezz) — ผู้เล่น ไอเทม และการต่อสู้
+# B (Jezz)
 
 Branch: `feat/player-combat`
 
-Jezz รับผิดชอบข้อมูลผู้เล่น กระเป๋า อุปกรณ์ มอน การคำนวณโจมตี การลด HP การฟื้นเลือด และ EXP/Level ส่งเมธอดกับข้อมูลให้ James ใช้ในเกม ดูกติกาใน [GAME_DESIGN](GAME_DESIGN.md) และงานอีกฝั่งใน [A (James)](A_James.md)
+รับผิดชอบ Player, Enemy, Item, Weapon, Armor และ Potion รวมข้อมูล ค่าพลัง กระเป๋า อุปกรณ์ การโจมตี และ EXP/Level
 
-## 1. Branch ที่ใช้
+อ่าน [กติกาเกม](GAME_DESIGN.md) และ [constructor/API ที่ใช้ร่วมกัน](PROJECT_PLAN.md) ก่อนเขียน งานของ James อยู่ใน [A_James](A_James.md)
 
-| Branch | เจ้าของ | หน้าที่ |
-|---|---|---|
-| `main` | ใช้ร่วมกัน โดย James ประสานการรวม | เวอร์ชันที่รวมระบบและรันได้ |
-| `feat/world-view` | James | โลกเกม การเดิน ประตู กุญแจ บันได ภาพ รับคำสั่ง และเมนู |
-| `feat/player-combat` | Jezz | ข้อมูลและพฤติกรรมของผู้เล่น ไอเทม มอน และการพัฒนาตัวละคร |
+## ไฟล์ที่ดูแล
 
-ใช้ branch ของตนต่อเนื่อง ไม่ต้องแยก branch ใหม่สำหรับยา อาวุธ หรือ EXP
-
-## 2. ไฟล์ที่รับผิดชอบ
-
-| ไฟล์ | ต้องทำอะไร |
+| ไฟล์ | หน้าที่ |
 |---|---|
-| `Player.java` | ค่าสถานะ พิกัด/ทิศ กระเป๋า อุปกรณ์ โจมตี รับดาเมจ Heal และเพิ่ม EXP/Level |
-| `Enemy.java` | ชื่อ HP, Max HP, ATK, EXP reward การรับดาเมจ โจมตี และตรวจว่าตายหรือยัง |
-| `Item.java` | ข้อมูลร่วมของไอเทม เช่น ชื่อ และเมธอด getDescription() |
-| `Weapon.java` | สืบทอด Item เก็บโบนัส ATK |
-| `Armor.java` | สืบทอด Item เก็บโบนัส DEF |
-| `Potion.java` | สืบทอด Item เก็บปริมาณ Heal |
+| Player.java | พิกัด/ทิศ HP/EXP/Level กระเป๋า อุปกรณ์ โจมตี รับดาเมจ Heal |
+| Enemy.java | ชื่อ HP/ATK/EXP reward ตรวจมีชีวิต โจมตี และรับดาเมจ |
+| Item.java | abstract class เก็บชื่อและ getDescription() |
+| Weapon.java | extends Item เก็บ attackBonus |
+| Armor.java | extends Item เก็บ defenseBonus |
+| Potion.java | extends Item เก็บ healAmount |
 
-James เขียน Key ให้สืบทอด Item และดูแลการจับคู่กับ Door ส่วน Jezz ทำกระเป๋าที่รับ Item ได้ทั่วไป จึงไม่ต้องเขียน UI หรือเงื่อนไขประตู
+James เขียน Key ให้สืบทอด Item และทำเมนู/หน้าจอ/ประตูทั้งหมด กระเป๋าของ Jezz รับ Item ทั่วไปได้โดยไม่ต้องรู้จัก Key โดยตรง
 
-## 3. งานที่ต้องทำโดยละเอียด
+## เริ่มทำอะไรก่อน
 
-### 3.1 ข้อมูล Player และการคุมค่า
+1. เข้า feat/player-combat
+2. เริ่ม Item แล้วทำ Weapon/Armor/Potion ที่มี constructor, getter และ getDescription()
+3. ทำโครง Enemy ให้มี constructor และข้อมูลพื้นฐาน
+4. ทำ Player ที่มีค่าตั้งต้น พิกัด/ทิศ/HP และ getter ตาม API
+5. ให้ทั้งหกคลาส compile ร่วมกับ Main ได้ ไม่ส่ง Player ที่อ้างถึงชนิดที่ยังไม่มี
+6. ส่งฐานนี้ให้ James ก่อน แล้วทำกระเป๋า Equip/Use และการต่อสู้ในรอบถัดไป
 
-- เก็บ HP, Max HP, EXP, Level, ค่าพลังพื้นฐาน พิกัด ทิศ รายการของ และอุปกรณ์ที่สวม
-- เริ่มไม่มีดาบ/เกราะที่ Equip มีพลังโจมตีมือเปล่าตามค่าที่ตกลง
-- ใช้ private สำหรับ field สำคัญ และให้ส่วนอื่นอ่าน/เปลี่ยนผ่านเมธอด
-- takeDamage() ทำให้ HP ต่ำสุดเป็น 0 ส่วน heal() ทำให้ HP สูงสุดไม่เกิน Max HP
-- เตรียม getX/getY/getDirection และ moveTo/setDirection ให้ James ควบคุมการเดินหลังตรวจด่านแล้ว
-- เมธอดโจมตี/ใช้ของไม่เปลี่ยนตำแหน่งผู้เล่น
+พฤติกรรมที่ยังไม่ถึงรอบไม่ต้องเปิดใช้ในเกม แต่คลาสและชนิดข้อมูลที่ถูกอ้างถึงต้องมีครบตั้งแต่ฐานรอบแรก
 
-### 3.2 Item และกระเป๋า
+## งานที่ต้องทำ
 
-- เริ่ม Item ด้วย constructor และข้อมูลที่ใช้ร่วมกัน เช่น name กับ getDescription()
-- ใช้ ArrayList<Item> เก็บของ และมีเมธอดเพิ่ม อ่าน และนำของออกเมื่อกติกาต้องใช้
-- Weapon/Armor/Potion สืบทอด Item แล้ว override รายละเอียดให้ตรงชนิด
-- ตัวอย่าง description: `Iron Sword: ATK +5`, `Leather Armor: DEF +2`, `Healing Potion: Heal 10 HP` โดยค่าจริงกำหนดในตารางสมดุล
-- ให้ James อ่านรายการเพื่อสร้างหน้า Inventory และตรวจ Key ไม่ให้ UI แก้ field ของกระเป๋าโดยตรง
-- การเก็บของเข้ากระเป๋ายังไม่ Equip หรือ Use ให้เอง
+### 1. Player และการคุมค่า
 
-### 3.3 อุปกรณ์และยา
+- field สำคัญเป็น private ใช้เมธอดอ่าน/เปลี่ยนข้อมูล
+- Player() เริ่ม Level 1, HP 20/20, base ATK 2, EXP 0 กระเป๋าว่าง และไม่สวมของ
+- เก็บพิกัดเริ่ม (0,0) หันเหนือ Game จะย้ายไปจุดเริ่มด่าน
+- moveTo/setDirection เปลี่ยนข้อมูลหลัง Game ตรวจด่านแล้ว ไม่ตรวจแผนที่เอง
+- takeDamage() ไม่ให้ HP ต่ำกว่า 0 และ heal() ไม่ให้เกิน Max HP
+- เมธอดโจมตี/ใช้ของไม่เปลี่ยนพิกัด ไม่รับปุ่ม และไม่พิมพ์หน้าจอ
 
-- equipWeapon() เปลี่ยนอาวุธที่สวม แล้ว getAttack() คืน ATK ปัจจุบันตามอาวุธนั้น
-- equipArmor() เปลี่ยนเกราะที่สวม แล้ว getDefense() คืนค่าป้องกันปัจจุบัน
-- การ Equip ซ้ำไม่บวกโบนัสทับหลายรอบ การเปลี่ยนชิ้นต้องคำนวณจากอุปกรณ์ที่สวมจริง
-- เปิดให้ James อ่าน equipped weapon/armor เพื่อแสดงชื่อและภาพดาบ
-- usePotion() ฟื้น Current HP ไม่เกิน Max HP และจัดการจำนวน/การนำยาออกตามกติกาที่เลือก
-- ตรวจว่าของที่เลือกใช้/สวมเป็นของในกระเป๋าจริง และส่งผลสำเร็จหรือไม่สำเร็จให้หน้าจอแสดงได้
-- เงื่อนไขการใช้ยาต่อหน้ามอนและการเสียยาเมื่อเลือดเต็มยังต้องเลือกก่อนเขียนส่วนนั้น
+### 2. Item และกระเป๋า
 
-### 3.4 Enemy และการโจมตี
+- Item มี protected constructor รับชื่อ, getName() และ abstract getDescription()
+- คลาสลูกเก็บค่าพลังเฉพาะและ override รายละเอียด
+- ใช้ `ArrayList<Item>` ภายใน Player และส่ง getItems() แบบอ่านอย่างเดียว
+- addItem/removeItem บอกผลด้วย boolean ไม่เพิ่มชิ้นเดิมซ้ำและไม่ลบชิ้นที่กำลัง Equip
+- มีของหลายชิ้นได้แต่ไม่ใช้/สวมให้อัตโนมัติ
+- James ใช้รายการเดียวกันแสดง Inventory และหา matching key ใน Door
 
-- เก็บชื่อ HP/current และ max, ATK และ EXP reward ตามค่าตายตัว
-- ไม่เขียนการเดินไล่ผู้เล่นหรือระบบสุ่มศัตรู
-- Player.attack(enemy) คำนวณ ATK จากค่าพื้นฐาน โบนัส Level และอาวุธที่ Equip แล้วลด HP มอน
-- Enemy.attack(player) คำนวณดาเมจหลังหักเกราะที่ Equip แล้วลด HP ผู้เล่น
-- เตรียม isAlive() เพื่อให้ Game ตรวจว่าควรสวนหรือให้ EXP
-- เมธอดเหล่านี้ทำเฉพาะการโจมตี ไม่รับปุ่ม W ไม่สั่งเดิน และไม่วนต่อสู้อัตโนมัติ
-- Game ของ James เป็นผู้เรียกผู้เล่นตีก่อน ถ้ามอนรอดจึงเรียกมันสวน ถ้ามอนตายจึงเรียกเพิ่ม EXP ครั้งเดียว
-- คืนค่าดาเมจที่หน้าจอต้องใช้ และให้ James อ่าน HP ล่าสุดได้ รูปแบบ overkill กับดาเมจขั้นต่ำรอตกลงตาม GAME_DESIGN
+### 3. Equip และยา
 
-ตัวอย่างเพื่ออธิบายผลลัพธ์ ไม่ใช่ตัวเลขที่ล็อกแล้ว:
+- equipWeapon/equipArmor ต้องรับชิ้นที่มีอยู่ในกระเป๋าจริง
+- เก็บอาวุธ/เกราะที่สวมอย่างละหนึ่งชิ้น Equip ซ้ำไม่บวกโบนัสซ้ำ เปลี่ยนชิ้นแล้วแทนชิ้นเก่า
+- getAttack() คำนวณ `2 + (Level - 1) + weaponBonus`
+- getDefense() คืน armorBonus หรือ 0 เมื่อไม่สวม
+- ส่ง equipped weapon/armor เป็นออบเจ็กต์หรือ null ให้ James แสดงผล
+- usePotion() ตรวจว่ามีชีวิต มียาชิ้นนั้น และ HP ไม่เต็ม ก่อน Heal แล้วนำยาออก
+- ถ้าขาดเงื่อนไขให้คืน false โดยไม่เปลี่ยนค่า เลือดเต็มแล้วไม่เสียยา
+
+### 4. Enemy และการโจมตี
+
+- Enemy เก็บชื่อ HP/Max HP, ATK และ EXP reward ตาม constructor
+- isAlive() คืน HP > 0 ไม่เก็บสถานะตายซ้ำกับ HP
+- Player.attack(enemy) หัก HP มอนเท่าที่เหลือและคืนค่าที่หักจริง
+- Enemy.attack(player) หัก `max(1, ATK - player.DEF)` ไม่เกิน HP ที่เหลือ และคืนค่าที่หักจริง
+- ฝ่ายโจมตีหรือเป้าหมายตายแล้วให้คืน 0 ไม่เปลี่ยนข้อมูล
+- เมธอดโจมตีไม่วนสู้ ไม่สั่งสวน ไม่ให้ EXP และไม่ย้ายตำแหน่ง
+- Game ของ James เป็นผู้ตรวจมอนรอด/ตาย แล้วเรียกสวนหรือ gainExp() ตามลำดับ
+
+ตัวอย่างค่าตั้งต้น:
 
 ```text
-Player ATK: 2 + Sword Bonus 5 = 7
-Goblin HP: 12 - 7 = 5
-Goblin ATK: 5 - Armor DEF 2 = 3 damage
-Player HP: 20 - 3 = 17
+Player ATK: 2 + Sword 5 = 7
+Goblin HP: 12 -> 5
+Goblin damage: 5 - Armor 2 = 3
+Player HP: 20 -> 17
 ```
 
-ตัวเลขส่งออกที่ James ต้องนำไปแสดงคือดาเมจ 7, Goblin HP 5/12, ดาเมจสวน 3 และ Player HP 17/20
+ถ้าตีอีกครั้ง Goblin เหลือ 5 จึงหักจริง 5 คืนดาเมจ 5 ให้หน้าจอ และ Game จะไม่เรียกมอนสวน
 
-### 3.5 EXP และ Level
+### 5. EXP และ Level
 
-- gainExp() รับ EXP ที่ Game ส่งมาเมื่อฆ่ามอน
-- ตรวจเกณฑ์ Level เพิ่ม max HP และ ATK ตามตาราง
-- Current HP ต้องคงเดิม เช่น 12/20 กลายเป็น 12/25
-- เลือกวิธีเพิ่ม ATK ให้ชัด: เพิ่มค่าพื้นฐานโดยตรง หรือเก็บโบนัส Level แยก อย่าบวกสองวิธีซ้ำกัน
-- เปิดให้ James อ่าน EXP, Level และค่าสถานะก่อน/หลัง เพื่อแสดงข้อความ Level Up
-- รูปแบบ EXP สะสม ส่วนเกิน และการข้ามหลาย Level ยังต้องตกลงให้ตรงกันก่อนเขียนรายละเอียด
+- Game ส่ง EXP เมื่อฆ่ามอนสำเร็จครั้งเดียว
+- getExp() เป็น EXP ของ Level ปัจจุบัน getExpToNextLevel() คืน `10 + 5 × (Level - 1)`
+- เมื่อครบเกณฑ์ หัก EXP เกณฑ์นั้น เพิ่ม Level และ Max HP +5 แล้วตรวจซ้ำถ้ายังเหลือพอ
+- Current HP คงเดิม เช่น 12/20 -> 12/25
+- โบนัส ATK มาจาก Level ใน getAttack() ไม่เพิ่ม base ATK ซ้ำอีกครั้ง
+- ส่งค่า Level/EXP/HP ล่าสุดให้ Game/หน้าจออ่าน ไม่พิมพ์ข้อความ Level Up เอง
 
-## 4. ความรู้ที่ใช้กับงานนี้
+## API ที่ส่งให้ James
 
-| เนื้อหา | ใช้ตรงไหน | ตัวอย่างเรียนที่เกี่ยวข้อง |
-|---|---|---|
-| Class / Object / Constructor | สร้าง Player, Enemy และไอเทมจากค่าตั้งต้น | DispatchDemo.java และคลาสใน Assignment1 |
-| Encapsulation / Guard condition | คุม HP และตรวจเงื่อนไขก่อนใช้ของ | Lab_4_Encapsulation.java |
-| Inheritance | Weapon/Armor/Potion สืบทอด Item | PayrollApp.java |
-| Overriding / Polymorphism | วน Item เรียก getDescription() ของแต่ละชนิด | PayrollApp.java และ DispatchDemo.java |
-| ArrayList | เก็บรายการของใน Inventory | Employee.java ใน Assignment1_Java |
-| Composition / Association | Player มีกระเป๋าและอ้างถึงอุปกรณ์ที่สวม | Employee.java / Division.java |
-| if / Loop / Method | ตรวจตาย ใช้ยา คำนวณโบนัส และตรวจเกณฑ์ EXP | ตัวอย่าง Java พื้นฐานและแลบ OOP |
+ใช้ชื่อ ชนิดข้อมูล และผลลัพธ์ใน [PROJECT_PLAN](PROJECT_PLAN.md) เป็นสัญญาร่วม โดยเฉพาะ:
 
-ดูรายละเอียดแหล่งเรียนใน [COURSE_SCOPE](COURSE_SCOPE.md) ใช้คลาสและเมธอดเรียบง่ายที่อธิบายได้ก่อน ไม่ต้องเพิ่ม framework สำหรับงานเหล่านี้
+- Player: พิกัด/ทิศ HP/ATK/DEF/Level/EXP, กระเป๋า, Equip/Use และ attack/gainExp
+- Enemy: getter, isAlive(), takeDamage(), attack()
+- Item: constructor, getName(), getDescription() และ getter ค่าพลังของคลาสลูก
 
-## 5. เมธอดที่ส่งให้ James ใช้
+ไม่เปลี่ยนชื่อเมธอดที่ใช้อยู่โดยแก้เพียงฝั่งเดียว ให้แจ้ง James เพื่อปรับจุดเรียกพร้อมกัน
 
-ตกลงชื่อและชนิดคืนค่าก่อนเริ่มเชื่อม นี่เป็นสัญญาที่เสนอ ยังไม่ใช่โค้ดที่มีอยู่แล้ว
+## ความรู้ที่ใช้
 
-| กลุ่ม | เมธอด/ข้อมูล |
+| แนวคิด | ใช้กับงาน |
 |---|---|
-| พิกัดและทิศ | getX(), getY(), getDirection(), moveTo(x,y), setDirection(direction) |
-| สถานะ | getHp(), getMaxHp(), getAttack(), getDefense(), getExp(), getLevel() |
-| กระเป๋า | getItems(), addItem(item), removeItem(item) |
-| อุปกรณ์/ยา | equipWeapon(weapon), equipArmor(armor), usePotion(potion), ข้อมูลอุปกรณ์ที่สวม |
-| ต่อสู้ | Player.attack(enemy), Enemy.attack(player), takeDamage(amount) |
-| มอน | isAlive(), getHp(), getMaxHp(), getExpReward() |
-| Level | gainExp(amount) |
-| Item | constructor ข้อมูลร่วม, getName(), getDescription() และค่าพลังเฉพาะชนิด |
+| Class / Constructor | สร้างผู้เล่น มอน และของจากค่าตั้งต้น |
+| Encapsulation / Guard | คุม HP และตรวจเงื่อนไขก่อนแก้ข้อมูล |
+| Inheritance / Overriding | ชนิดไอเทมสืบทอด Item และแสดงรายละเอียดต่างกัน |
+| Polymorphism | วนรายการ Item โดยไม่ต้องแสดงผลแยกด้วยชนิดทุกชิ้น |
+| ArrayList / Association | กระเป๋ามีหลายชิ้น อุปกรณ์ที่สวมอย่างละ 0..1 |
+| if / Loop / Method | การโจมตี Heal และตรวจเกณฑ์ EXP ซ้ำ |
+| OOAD / Information Expert | ให้คลาสคำนวณพฤติกรรมจากข้อมูลของตน |
+| Sequence / Layering | ทำเมธอดให้ Game เรียกตามลำดับ โดยแยกจากหน้าจอ |
 
-James รับผิดชอบ Game, Door/Key และหน้าจอ หากต้องเปลี่ยนชื่อเมธอดที่ James เรียกใช้ ให้แจ้งและรวมการเปลี่ยนส่วนเชื่อมให้ครบ
+รายละเอียดแนวคิดเพิ่มเติมอยู่ใน [COURSE_SCOPE](COURSE_SCOPE.md)
 
-## 6. ลำดับส่งงานเข้า main
+## รอบส่งงาน
 
-| รอบ | Jezz ทำ | James นำไปเชื่อมกับอะไร | ผลเมื่อรวมแล้ว |
-|---|---|---|---|
-| 1: สำรวจ | Player พื้นฐาน พิกัด/ทิศ/HP และ Item โครงข้อมูลร่วม | Game การเดิน ภาพและ STATUS | เดินสำรวจและเห็นค่าสถานะได้ |
-| 2: ของและประตู | กระเป๋า Weapon/Armor/Potion และ Equip/Use | หน้า Inventory จุดเก็บของ Key/Door และภาพดาบ | เก็บและใช้ของ เปิดทางได้ |
-| 3: ต่อสู้ | Enemy สูตรโจมตี เกราะ HP และ EXP/Level | การกด W และ combat log | ตีทีละครั้ง ตายไม่สวน เลเวลขึ้นไม่ Heal |
-| 4: เกมครบ | ปรับตารางตัวเลขและแก้บั๊กข้อมูล/กติกา | สองชั้น บันได และจุดจบเกม | เล่นครบตั้งแต่เริ่มจนชนะหรือแพ้ได้ |
+| รอบ | งาน Jezz | James นำไปใช้กับ |
+|---|---|---|
+| 1 | โครงหกคลาส constructor/getter, Player พิกัด/ทิศ/HP, Item พื้นฐาน | Game เดิน/หัน STATUS และ Key |
+| 2 | กระเป๋า Equip/Use และค่าพลังอุปกรณ์ | เก็บของ Inventory UI และประตู |
+| 3 | Enemy โจมตี HP เกราะ และ EXP/Level | W ต่อสู้ log แพ้/เริ่มใหม่ |
+| 4 | ปรับค่าสมดุลและแก้บั๊กข้อมูล | เกมสองชั้นครบ |
 
-ส่ง Player และ Item พื้นฐานให้เร็ว ไม่ต้องรอให้การต่อสู้ทั้งชุดเสร็จ James จึงเริ่มใช้เมธอดและสร้าง Key ต่อได้ ขณะ James ทำภาพ/ด่าน Jezz ทำอุปกรณ์และสูตรจากข้อมูลตัวอย่างได้
-
-## 7. Git flow ของ Jezz
-
-ใช้ repo ของตนเอง ก่อนสลับ branch ให้ commit งานค้างของตนให้เรียบร้อย James เป็นผู้ประสานการรวม main
-
-### เข้า branch ครั้งแรกหลัง clone
-
-ใช้ branch ของ Jezz ที่เตรียมจากฐาน main:
-
-```bash
-git fetch origin
-git switch --track origin/feat/player-combat
-```
-
-ถ้ามี local branch อยู่แล้วหรือกลับมาทำงานครั้งต่อไป ใช้ `git switch feat/player-combat`
-
-### ทำงานและส่งรอบที่พร้อม
-
-ตัวอย่างรอบ Player/Item พื้นฐาน เลือก git add เฉพาะไฟล์ที่แก้จริง:
-
-```bash
-git add src/Player.java src/Item.java
-git commit -m "feat: add player state and base item"
-git push -u origin feat/player-combat
-```
-
-แจ้ง James ว่ารอบนี้พร้อม อธิบายเมธอดที่เพิ่มและผลที่ต้องเห็น เช่น Player มีตำแหน่ง/ทิศ/HP และ Game เรียก moveTo() ได้ James จะนำ branch นี้ไป merge เข้า main
-
-### หลัง James ส่ง main รอบใหม่
+## Git ของ Jezz
 
 ```bash
 git fetch origin
@@ -165,34 +132,28 @@ git switch feat/player-combat
 git merge origin/main
 ```
 
-ทำรอบถัดไปบน branch เดิม ตัวอย่างเมื่อระบบต่อสู้พร้อม:
+ก่อนทำต่อหลัง James ส่ง main ใหม่:
 
 ```bash
-git add src/Player.java src/Enemy.java
-git commit -m "feat: add combat damage and level progression"
-git push origin feat/player-combat
+git fetch origin
+git merge origin/main
 ```
 
-ชื่อไฟล์เป็นตัวอย่าง ให้ stage เฉพาะไฟล์ที่มีอยู่และแก้จริงในรอบนั้น ไม่ต้อง push main หรือแก้ไฟล์ Game/หน้าจอแทน James
+ตัวอย่างส่งฐานหกคลาส:
 
-### ถ้ามี conflict
-
-ใช้ git status ดูไฟล์ที่ชน คุยกับ James ว่าจะเก็บพฤติกรรมใด แก้เครื่องหมาย conflict แล้ว git add ไฟล์ที่แก้และ git commit จากนั้นลองผลที่เกี่ยวข้องก่อน push อย่าเลือกทับทั้งไฟล์โดยไม่อ่าน
-
-## 8. ผลที่งาน Jezz ต้องทำได้
-
-- HP ไม่ติดลบ Heal ไม่เกิน Max HP
-- ของที่ยังไม่ Equip ไม่เพิ่ม ATK/DEF และเปลี่ยนอุปกรณ์แล้วไม่บวกโบนัสซ้ำ
-- เมธอดโจมตีไม่ขยับผู้เล่น และ James เรียกสวนเฉพาะมอนที่รอดได้
-- ข้อมูล HP มอนกับดาเมจส่งให้หน้าจอแสดงได้ครบ
-- EXP/Level เพิ่มถูกเกณฑ์ โดย Level Up ไม่เติม Current HP
-- Player/Item/Enemy ใช้ร่วมกับ Game และหน้าจอของ James ได้ผ่านเมธอดที่ตกลง
-
-เมื่อมี src/*.java ครบตามโครงสร้างและยังไม่ใช้ package สามารถลองผลรวมด้วย:
-
-```powershell
-javac -encoding UTF-8 -d build src/*.java
-java -cp build Main
+```bash
+git add src/Player.java src/Enemy.java src/Item.java src/Weapon.java src/Armor.java src/Potion.java
+git commit -m "feat: add player and item foundation"
+git push -u origin feat/player-combat
 ```
 
-ฐาน main มี Main.java ที่ compile/run ได้แล้ว ใช้ branch ของตนพัฒนาคลาสระบบเกมตามรอบงานข้างต้น
+เลือกเฉพาะไฟล์ที่แก้จริง แจ้ง James ว่ารอบใดพร้อมและเพิ่มเมธอดอะไร James จะประสานรวม main ใช้ branch เดิมทำงานรอบต่อไป ดู flow ร่วมใน [TEAM_WORKFLOW](TEAM_WORKFLOW.md)
+
+## งาน Jezz ทำ
+
+- constructor/getter ใช้กับ Game/Key/หน้าจอได้ตาม API
+- HP อยู่ในช่วง 0 ถึง Max HP
+- Equip ซ้ำไม่เพิ่มโบนัสทับ ของที่ยังไม่ Equip ไม่มีผล
+- ใช้ยาสำเร็จจึงนำยาออก เลือดเต็มไม่เสียยา
+- attack() ไม่ขยับ ไม่สวนเอง และส่งจำนวน HP ที่หักจริง
+- EXP/Level ถูกเกณฑ์ Current HP ไม่เพิ่มตอน Level Up
