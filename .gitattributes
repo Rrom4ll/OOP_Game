@@ -1,0 +1,2 @@
+# ASCII examples keep padding spaces so every row has the declared width.
+docs/examples/*.txt text eol=lf -whitespace

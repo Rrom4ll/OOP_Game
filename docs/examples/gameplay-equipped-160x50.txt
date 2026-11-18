@@ -1,0 +1,50 @@
++----------------------+--------------------------------------------------------------------------------------------------------------+------------------------+
+|STATUS                | \.              ...              ...              ...              ...              ...              ...   / |CONTROLS                |
+|                      | 9\\\\        ...              ...              ...              ...              ...              ...  ////# |                        |
+|Floor: 1              | S#9GS\\\  ...              ...              ...              ...              ...              ...  ///|#S#9 |W: Forward / Attack     |
+|Level: 1              | #9SS#GSS\\\\            ...              ...              ...              ...              ... ////SGS|G#9S |A: Turn Left            |
+|HP: 17/20             | 9S##GS#HGSHH\\\      ...              ...              ...              ...              ... ///GHGSHS#|S9S# |D: Turn Right           |
+|EXP: 0/10             | S#9GS#GGSHGG|HG\\\\..              ...              ...              ...              ...////MHGMGSHG#G|#S#9 |I: Inventory            |
+|ATK: 7                | -------------------\\\          ...              ...              ...              ...///------------------- |                        |
+|DEF: 2                | 9S##GS#|GSHHGMHHhMH3|M\\\\   ...              ...              ...              ..////hM3MHhMGMHGH|SHS#GS9S# |Press Enter             |
+|                      | S#9GS#G|SHGGMHGhMHhh|3hh53\\\              ...              ...              ..///3h5|M3hHhMHMHGMG|HG#GS#S#9 |                        |
+|WEAPON                | #9SS#GS|HGSMHGMMHhMM|hM53h553\\\\       ...              ...              .////323h53|3hMhMHhHGMHS|GSGS#G#9S |ENEMY AHEAD             |
+|Iron Sword            | 9S##GS#|GSHHGMHHhMH3|M33h533253A2\________________________________________/5A5325h53h|hM3MHhMGMHGH|SHS#GS9S# |Goblin                  |
+|                      | S#9GS#G|SHGGMHGhMHhh|3hh53h253225||A3                                  3X|5A2325353h5|M3hHhMHMHGMG|HG#GS#S#9 |HP: 5/12                |
+|ARMOR                 | ----------------------------------|s2                                  2h|---------------------------------- |                        |
+|Leather Armor         | 9S|#GS#HGSHHGMH|hMH3hM33h533|53A25|3X                                  X5|25A532|h53h3hM3MHhM|MHGHGSHS#GS9|# |                        |
+|                      | S#|GS#GGSHGGMHG|MHhhM3hh53h2|3225A|2h            /\      /\            hA|5A2325|53h5hM3hHhMH|HGMGSHG#GS#S|9 |                        |
+|                      | #9|S#GSSHGSMHGM|HhMM3hM53h55|255A2|--           /  \____/  \           --|A25253|3h53M3hMhMHh|GMHSHGSGS#G#|S |                        |
+|                      | 9S|#GS#HGSHHGMH|hMH3hM33h533|53A25|hA          /  __    __  \          A3|25A532|h53h3hM3MHhM|MHGHGSHS#GS9|# |                        |
+|                      | S#|GS#GGSHGGMHG|MHhhM3hh53h2|3225A|5s         |  (o)    (o)  |         s2|5A2325|53h5hM3hHhMH|HGMGSHG#GS#S|9 |                        |
+|                      | ----------------------------------|A3         |      /\      |         3X|---------------------------------- |                        |
+|                      | 9S##GS#HGS|HGMHHhMH3hM3|h533253A25|s2          \   .____.   /          2h|2|A5325h53h3hM|MHhMGMHGHGSH|#GS9S# |                        |
+|                      | S#9GS#GGSH|GMHGhMHhhM3h|53h253225A|--           \  |/\|  /             --|5|2325353h5hM3|HhMHMHGMGSHG|GS#S#9 |                        |
+|                      | #9SS#GSSHG|MHGMMHhMM3hM|3h553255A2|2h            \______/              hA|A|525323h53M3h|hMHhHGMHSHGS|S#G#9S |                        |
+|                      | 9S##GS#HGS|HGMHHhMH3hM3|h533253A25|X5          ___/|##|\___            5s|2|A5325h53h3hM|MHhMGMHGHG /\ GS9S# |                        |
+|                      | S#9GS#GGSH|GMHGhMHhhM3h|53h253225A|hA         /###/|##|\###\           A3|5|2325353h5hM3|HhMHMHGMG /  | #S#9 |                        |
+|                      | ----------------------------------|5s        /###/ |##| \###\          s2|------------------------ |!|  ---- |                        |
+|                      | 9S##G|#HGSHHGMHHhM|3hM33h533253|25|--       /___/  |##|  \___\         --|25A5325h5|h3hM3MHhMGMH|H |!|  S9S# |                        |
+|                      | S#9GS|GGSHGGMHGhMH|hM3hh53h2532|5A|s|         ||  /####\  ||           2||5A2325353|5hM3hHhMHMHG|G |!|  #S#9 |                        |
+|                      | #9SS#|SSHGSMHGMMHh|M3hM53h55325|A2|3|         || /######\ ||           X||A2525323h|3M3hMhMHhHGM|S |!|  G#9S |                        |
+|                      | 9S##G|#HGSHHGMHHhM|3hM33h533253|25|2|           /__|  |__\             h||25A5325h5|h3hM3MHhMGMH|H |!|  S9S# |                        |
+|                      | S#9GS|GGSHGGMHGhMH|hM3hh53h2532|5A|X|           |##|  |##|             5||5A2325353|5hM3hHhMHMHG|G |!|  #S#9 |                        |
+|                      | ----------------------------------|--          _|##|  |##|_            --|------------------------ |!|  ---- |                        |
+|                      | |S##GS#HGSHHG|HHhMH3hM33h5|3253A2/____________/____|__|____\______________\5A5|25h53h3hM3MH|MGMHGH |!|  |9S# |                        |
+|                      | |#9GS#GGSHGGM|GhMHhhM3hh53|25////      ...     ::::::..          ...       \\\\5353h5hM3hHh|HMHGMG |!|  |S#9 |                        |
+|                      | |9SS#GSSHGSMH|MMHhMM3hM53h///        ... ::::::   ...          ...     ::::::..\\\h53M3hMhM|hHGMHS |!|  |#9S |                        |
+|                      | |S##GS#HGSHHG|HHhMH3hM////         ::::::       ...          ... ::::::   ...     \\\\hM3MH|MGMHGH |!|  |9S# |                        |
+|                      | |#9GS#GGSHGGM|GhMHh///.      ::::::.          ...          ::::::       ...          .\\\Hh|HMHGMG |!|  |S#9 |                        |
+|                      | ---------------////..  ::::::  ...          ...      ::::::.          ...          ::::::\\\\-- ___|__|__ -- |                        |
+|                      | 9S##GS#H|SHH/// .::::::      ...          ...  ::::::  ...          ...      ::::::.         \ /___/||\__\ # |                        |
+|                      | S#9GS#GG////:::::          ...          .::::::      ...          ...  ::::::  ...          ... \\ |##| #S#9 |                        |
+|                      | #9SS#///::: ...          ...       ::::::          ...          .::::::      ...          ...  :: /####\ #9S |                        |
+|                      | 9////     ...          ...   :::::: ...          ...       ::::::          ...          .::::::  /######\ \# |                        |
+|                      | /       ...          ..::::::     ...          ...   :::::: ...          ...       ::::::       /________\ \ |                        |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|You hit Goblin for 7 damage. Goblin HP: 5/12.                                                                                                                 |
+|Goblin hits you for 3 damage. Your HP: 17/20.                                                                                                                 |
+|The attack did not move you.                                                                                                                                  |
+|                                                                                                                                                              |
+|Command > _                                                                                                                                                   |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
